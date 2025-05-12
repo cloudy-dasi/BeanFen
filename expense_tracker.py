@@ -26,17 +26,16 @@ import os
 FILENAME = "beanfen.json"
 def save_data(data):
     with open(FILENAME, "w") as f:
-        json.dump(data, f) #we will write a json file named beanfen.json by dumping data into it
+        json.dump(data, f) #we will write a json file named beanfen.json by dumping data into that file
 def load_data():
     if not os.path.exists(FILENAME):
         return {}
     try:
         with open(FILENAME, "r") as f:
-            return json.load(f)
-            if data.get("user_name") != user_name:
-                print("👤 Different user detected. Starting fresh.")
-                return {}
-            return data
+            data = json.load(f) #we read the file and turn data into the json file after loading the file
+        if data.get("user_name") != user_name:
+            return {}
+        return data
     except json.JSONDecodeError:
         return {}
 
@@ -51,7 +50,7 @@ def main():
     print("Welcome to BeanFen")
     data = load_data()
     user(data)
-    print(f"Here is your data: \n user_name: {data["user_name"]} \n expected_expense_in_a_month: {data["expected_expense_in_a_month"]} \n recommended_amount_per_day: {data["recommended_amount_per_day"]} \n your_expense: {data["your_expense"]} \n total_expense_a_day: {data["total_expense_a_day"]} \n left_amount_in_a_day: {data["left_amount_in_a_day"]} \n amount_spent_on_Food: {data["amount_spent_on_Food"]} \n amount_spent_on_Home: {data["amount_spent_on_Home"]} \n amount_spent_on_Health: {data["amount_spent_on_Health"]} \n amount_spent_on_Work: {data["amount_spent_on_Work"]} \n amount_spent_on_Entertainment: {data["amount_spent_on_Entertainment"]} \n amount_spent_on_Study: {data["amount_spent_on_Study"]}")
+    print(f"Here is your data: \n user_name: {data["user_name"]} \n expected_expense_in_a_month: {data["expected_expense_in_a_month"]} \n recommended_amount_per_day: {data["recommended_amount_per_day"]} \n your_expense: {data["your_expense"]} \n total_expense_a_day: {data["total_expense_a_day"]} \n left_amount_in_a_day (compared to recommender_amount_per_day): {data["left_amount_in_a_day"]} \n amount_spent_on_Food: {data["amount_spent_on_Food"]} \n amount_spent_on_Home: {data["amount_spent_on_Home"]} \n amount_spent_on_Health: {data["amount_spent_on_Health"]} \n amount_spent_on_Work: {data["amount_spent_on_Work"]} \n amount_spent_on_Entertainment: {data["amount_spent_on_Entertainment"]} \n amount_spent_on_Study: {data["amount_spent_on_Study"]}")
 
 def update_category(data):
     for keys in list_of_expense:
@@ -69,9 +68,8 @@ def user(data):
         user_expense(data)
         update_category(data)
         save_data(data)
-        print("We have some next steps for you!")
-    if "user_name" in data:
-        user_name = input("Enter your name: ").capitalize()
+    else:
+        user_name = input("Enter your name (perhaps again :3 ): ").capitalize()
         if data["user_name"] == user_name:
             total_expense_overwrite = str(input("Do you want to overwrite your 'expected total expense in a month' (write Y/N): ")).capitalize()
             if total_expense_overwrite == "Y":
@@ -90,7 +88,7 @@ def user(data):
                             if new_added_category == keys:
                                 list_of_expense[new_added_category] += new_expense
                                 data[f"amount_spent_on_{new_added_category}"] = list_of_expense[new_added_category]
-                    save_data(data)
+                save_data(data)
             else:
                 add_more_new_expense = str(input("Do you want to add more new expense? (write Y/N): ")).capitalize()
                 if add_more_new_expense == "Y":
@@ -104,8 +102,8 @@ def user(data):
                             if new_added_category == keys:
                                 list_of_expense[new_added_category] += new_expense
                                 data[f"amount_spent_on_{new_added_category}"] = list_of_expense[new_added_category]
-                    save_data(data)
-            return(data)
+                save_data(data)
+        return(data)
         
 def recommended_per_day(data):
     global recommended_amount_per_day
