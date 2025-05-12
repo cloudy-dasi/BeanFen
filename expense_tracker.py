@@ -59,7 +59,7 @@ def update_category(data):
     for keys in list_of_expense:
         if keys not in data:
             data[f"amount_spent_on_{keys}"] = list_of_expense[keys]
-            save_data(data)
+            save_data(data) #save and write one by one
 
 def user(data):
     global user_name
@@ -91,7 +91,7 @@ def user(data):
                             if new_added_category == keys:
                                 list_of_expense[new_added_category] += new_expense
                                 data[f"amount_spent_on_{new_added_category}"] = list_of_expense[new_added_category]
-                save_data(data)
+                save_data(data) #save and write data into the file only when user input and process all inputs
             else:
                 add_more_new_expense = str(input("Do you want to add more new expense? (write Y/N): ")).capitalize()
                 if add_more_new_expense == "Y":
@@ -115,7 +115,7 @@ def recommended_per_day(data):
         if "recommended_amount_per_day" not in data:
             recommended_amount_per_day = int(data["expected_expense_in_a_month"] / 30)
             data["recommended_amount_per_day"] = recommended_amount_per_day
-        save_data(data)
+        save_data(data) #save data only when finishing the input (write data into file)
     print(f"The amount should be spent on a day: {data["recommended_amount_per_day"]}")
 
 def user_expense(data):
@@ -127,7 +127,7 @@ def user_expense(data):
             if category_of_expense == keys:
                 list_of_expense[category_of_expense] += user_expense
                 data[f"amount_spent_on_{category_of_expense}"] = list_of_expense[category_of_expense]
-                save_data(data)
+                save_data(data) #save and write data at right that loop
         data["your_expense"] = user_expense
         total_expense_a_day += user_expense
         if "total_expense_in_a_day" not in data:
