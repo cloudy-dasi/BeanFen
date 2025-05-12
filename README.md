@@ -37,7 +37,7 @@ def main():
 
 ```
 - after struggling to make the data refresh again when a different user enters their name to use the feature, this is solution.
-- at first try, the flow I created is not a well-systematic flow. Because if i want the data refresh based on user_name then I should put the input of user_name at the first start and then use its value as argument of load_data() function. However I let user input their user name then use the value of the input to process other related data and to write data in the file
+- at first try, the flow I created is not a well-systematic flow. Because if i want the data refresh when user enters different user_name compared to the saved data in the json file then I should put the input of user_name at the first start and then use its value as argument of load_data() function. However I let user input their user name then use the value of the input to process other related data and to write data in the file
 - the flow should be like this:
 <br><div style="color: pink">input user_name -> load the file to prepare the data (enable the "read and get data" ability) -> the stage of how data will be written into the json file and modified by using syntax dict[""]</div>
 
