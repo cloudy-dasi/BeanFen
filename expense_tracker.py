@@ -53,7 +53,7 @@ def main():
     user_name = input("Enter your name: ").capitalize()
     data = load_data(user_name) #or data = json.load(f) => data now is a json file
     user(data)
-    print(f"Here is your data: \n user_name: {data["user_name"]} \n expected_expense_in_a_month: {data["expected_expense_in_a_month"]} \n recommended_amount_per_day: {data["recommended_amount_per_day"]} \n your_expense: {data["your_expense"]} \n total_expense_a_day: {data["total_expense_a_day"]} \n left_amount_in_a_day (compared to recommender_amount_per_day): {data["left_amount_in_a_day"]} \n amount_spent_on_Food: {data["amount_spent_on_Food"]} \n amount_spent_on_Home: {data["amount_spent_on_Home"]} \n amount_spent_on_Health: {data["amount_spent_on_Health"]} \n amount_spent_on_Work: {data["amount_spent_on_Work"]} \n amount_spent_on_Entertainment: {data["amount_spent_on_Entertainment"]} \n amount_spent_on_Study: {data["amount_spent_on_Study"]}")
+    print(f"Here is your data: \n user_name: {data["user_name"]} \n expected_expense_in_a_month: {data["expected_expense_in_a_month"]} \n recommended_amount_per_day: {data["recommended_amount_per_day"]} \n your_expense: {data["your_expense"]} \n total_expense_a_day: {data["total_expense_a_day"]} \n left_amount_in_a_day (compared to recommended_amount_per_day): {data["left_amount_in_a_day"]} \n amount_spent_on_Food: {data["amount_spent_on_Food"]} \n amount_spent_on_Home: {data["amount_spent_on_Home"]} \n amount_spent_on_Health: {data["amount_spent_on_Health"]} \n amount_spent_on_Work: {data["amount_spent_on_Work"]} \n amount_spent_on_Entertainment: {data["amount_spent_on_Entertainment"]} \n amount_spent_on_Study: {data["amount_spent_on_Study"]}")
 
 def update_category(data):
     for keys in list_of_expense:
