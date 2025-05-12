@@ -69,7 +69,7 @@ def user(data):
         recommended_per_day(data)
         user_expense(data)
         update_category(data)
-        save_data(data)
+        save_data(data) #make sure all data have been saved and written, save and write the data of user_name
     if "user_name" in data:
         #user_name = input("Enter your name (perhaps again :3 ): ").capitalize()
         if data["user_name"] == user_name:
