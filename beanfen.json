@@ -1,1 +1,1 @@
-{"user_name": "Bong", "expected_expense_in_a_month": 1200000, "recommended_amount_per_day": 40000, "your_expense": 156000, "total_expense_a_day": 156000, "left_amount_in_a_day": -116000}
+{"user_name": "Bong", "expected_expense_in_a_month": 1200000, "recommended_amount_per_day": 40000, "amount_spent_on_Food": 30000, "your_expense": 75000, "total_expense_a_day": 75000, "left_amount_in_a_day": -35000, "amount_spent_on_Home": 15000, "amount_spent_on_Health": 30000, "amount_spent_on_Work": 0, "amount_spent_on_Entertainment": 0, "amount_spent_on_Study": 0}
