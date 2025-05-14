@@ -56,7 +56,7 @@ def main():
     data = load_data(user_name) #or data = json.load(f)
     check_and_update_daily_data(data) #check the date right after loading the file
     user(data)
-    print(f"Here is your data: \n user_name: {data.get("user_name")} \n expected_expense_in_a_month: {data.get("expected_expense_in_a_month")} \n recommended_amount_per_day: {data.get("recommended_amount_per_day")} \n recommended_amount_today: {data.get("recommended_amount_today")} \n your_expense_until_now: {data.get("your_expense")} \n today_you_have_spent: {data.get("total_expense_a_day")} \n left_amount_in_a_day (compared to recommended_amount_per_day): {data.get("left_amount_in_a_day")} \n your_total_left_amount (compared to expected_expense_in_a_month): {data.get("total_left_amount")} \n expense_next_day: {data.get("expense_per_day_from_now_on")} \n amount_spent_on_Food: {data.get("amount_spent_on_Food")} \n amount_spent_on_Home: {data.get("amount_spent_on_Home")} \n amount_spent_on_Health: {data.get("amount_spent_on_Health")} \n amount_spent_on_Work: {data.get("amount_spent_on_Work")} \n amount_spent_on_Entertainment: {data.get("amount_spent_on_Entertainment")} \n amount_spent_on_Study: {data.get("amount_spent_on_Study")}")
+    print(f"Here is your data: \n user_name: {data.get("user_name")} \n expected_expense_in_a_month: {data.get("expected_expense_in_a_month")} \n recommended_amount_per_day: {data.get("recommended_amount_per_day")} \n recommended_amount_today: {data.get("recommended_amount_today")} \n your_expense_until_now: {data.get("your_expense")} \n today_you_have_spent: {data.get("total_expense_a_day")} \n left_amount_in_a_day (compared to recommended_amount_today): {data.get("left_amount_in_a_day")} \n your_total_left_amount (compared to expected_expense_in_a_month): {data.get("total_left_amount")} \n expense_next_day: {data.get("expense_per_day_from_now_on")} \n amount_spent_on_Food: {data.get("amount_spent_on_Food")} \n amount_spent_on_Home: {data.get("amount_spent_on_Home")} \n amount_spent_on_Health: {data.get("amount_spent_on_Health")} \n amount_spent_on_Work: {data.get("amount_spent_on_Work")} \n amount_spent_on_Entertainment: {data.get("amount_spent_on_Entertainment")} \n amount_spent_on_Study: {data.get("amount_spent_on_Study")}")
     print (f"This is your history of expense today {data.get("last_update")}: {data.get("expense_per_day_list")}")
 
 def check_and_update_daily_data(data):
@@ -108,12 +108,14 @@ def user(data):
                 new_total_expected_expense = int(input("The new amount you expect to spend in this month: "))
                 data["expected_expense_in_a_month"] = new_total_expected_expense
                 data["recommended_amount_per_day"] = int(data["expected_expense_in_a_month"] / 30)
+                data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
                 if data["left_amount_in_a_day"] <0:
+                    print(f"!Attention: You have overwritten your expected_expense_in_a_month. You ought to have been recommended to spend {data.get("recommended_amount_per_day")} today, \nhowever today you have spend an amount extends your recommended_amount_today which is {data.get("left_amount_in_a_day")} compared to \n(your last expected_amount_in_a_month and last total_left_amount), so your recommended_amount_today will be modified")
                     data["recommended_amount_today"] = data["expense_per_day_from_now_on"]
                 else:
                     data["recommended_amount_today"] = data["recommended_amount_per_day"]
+                data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
                 data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
-                data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
                 add_more_new_expense = str(input("Do you want to add more new expense? (write Y/N): ")).capitalize()
                 if add_more_new_expense == "Y":
                     data["last_update"] = datetime.today().strftime("%d/%m/%Y")
