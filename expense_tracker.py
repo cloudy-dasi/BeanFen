@@ -87,6 +87,7 @@ def user(data):
     global user_name
     global list_of_expense
     global expense_per_day_list
+    global total_expense_a_day
     if "user_name" not in data:
         data["user_name"] = user_name
         data["last_update"] = datetime.today().strftime("%d/%m/%Y") #update today
@@ -106,14 +107,11 @@ def user(data):
                 data["last_update"] = datetime.today().strftime("%d/%m/%Y")
                 check_and_update_daily_data(data)
                 new_total_expected_expense = int(input("The new amount you expect to spend in this month: "))
+                print ("You have successfully overwritten your expected_amount_in_a_month!")
                 data["expected_expense_in_a_month"] = new_total_expected_expense
                 data["recommended_amount_per_day"] = int(data["expected_expense_in_a_month"] / 30)
+                data["recommended_amount_today"] = data["recommended_amount_per_day"]
                 data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
-                if data["left_amount_in_a_day"] <0:
-                    print(f"!Attention: You have overwritten your expected_expense_in_a_month. You ought to have been recommended to spend {data.get("recommended_amount_per_day")} today, \nhowever today you have spend an amount extends your recommended_amount_today which is {data.get("left_amount_in_a_day")} compared to \n(your last expected_amount_in_a_month and last total_left_amount), so your recommended_amount_today will be modified")
-                    data["recommended_amount_today"] = data["expense_per_day_from_now_on"]
-                else:
-                    data["recommended_amount_today"] = data["recommended_amount_per_day"]
                 data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
                 data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
                 add_more_new_expense = str(input("Do you want to add more new expense? (write Y/N): ")).capitalize()
@@ -140,7 +138,6 @@ def user(data):
             else:
                 data["last_update"] = datetime.today().strftime("%d/%m/%Y")
                 check_and_update_daily_data(data)
-                data["last_update"] = datetime.today().strftime("%d/%m/%Y")
                 add_more_new_expense = str(input("Do you want to add more new expense? (write Y/N): ")).capitalize()
                 if add_more_new_expense == "Y":
                     data["last_update"] = datetime.today().strftime("%d/%m/%Y")
