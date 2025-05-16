@@ -66,11 +66,11 @@ def check_and_update_daily_data(data):
         data["last_update"] = today
         save_data(data)
     else: #if last_update exists, it wont update the "last_update", just check the condition following
-        if data["last_update"] != datetime.today().strftime("%d/%m/%Y"):
+        if data.get("last_update") != datetime.today().strftime("%d/%m/%Y"):
             expense_a_month_list.append(data.get("expense_per_day_list"))
             data["expense_per_day_list"] = []
             data["total_expense_a_day"] = 0
-            if data["left_amount_in_a_day"] <0:
+            if data["left_amount_in_a_day"] <0: #check if the left amount is negative
                 print(f"Your previous day expense extends the recommended an amount {data["left_amount_in_a_day"]} \nso we will overwrite the recommended_amount_today to make it suitable with your condition :3")
                 data["recommended_amount_today"] = data["expense_per_day_from_now_on"]
         save_data(data)
