@@ -145,6 +145,7 @@ def user(data):
                     if "expense_per_day_list" in data:
                         data["expense_per_day_list"].append(new_expense)
                     data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
+                    data["your_expense"] += new_expense
                     data["left_amount_in_a_day"] = data["recommended_amount_per_day"] - data["total_expense_a_day"]
                     data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
                     data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
