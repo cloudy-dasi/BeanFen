@@ -19,7 +19,7 @@ if the total saving == the total expected amount of expense => meet expectation,
 """
 #use json to access values
 import json
-import os
+import os #operate system
 from datetime import datetime
 
 
@@ -130,8 +130,8 @@ def user(data):
                     for keys in list_of_expense:
                         if keys in data:
                             if new_added_category == keys:
-                                list_of_expense[new_added_category] += new_expense
-                                data[f"amount_spent_on_{new_added_category}"] = list_of_expense[new_added_category]
+                                list_of_expense[keys] += new_expense
+                                data[f"amount_spent_on_{keys}"] = list_of_expense[keys]
                 save_data(data) #save and write data into the file only when user input and process all inputs
             else:
                 data["last_update"] = datetime.today().strftime("%d/%m/%Y")
@@ -152,8 +152,8 @@ def user(data):
                     for keys in list_of_expense:
                         if f"amount_spent_on_{keys}" in data:
                             if new_added_category == keys:
-                                list_of_expense[new_added_category] += new_expense
-                                data[f"amount_spent_on_{new_added_category}"] = list_of_expense[new_added_category]
+                                list_of_expense[keys] += new_expense
+                                data[f"amount_spent_on_{keys}"] = list_of_expense[keys]
                 save_data(data)
 
 def recommended_per_day(data):
