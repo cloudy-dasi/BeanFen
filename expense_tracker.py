@@ -41,12 +41,12 @@ def load_data(current_user_name): #load_data() happens only when user_name input
         return {}
 
 recommended_amount_per_day = None
-total_expense_a_day = 0
+#DELETE total_expense_a_day = 0
 list_of_expense = {"Food": 0, "Home": 0, "Health": 0, "Work": 0, "Entertainment": 0, "Study": 0}
 user_expense = int()
 expense_a_year_list = list()
 expense_a_month_list = list() #total_expense_in_day (30 items)
-expense_per_day_list = list()
+#DELETE expense_per_day_list = list()
 user_name = str()
 
 def main():
@@ -58,7 +58,6 @@ def main():
     user(data)
     print(f"Here is your data: \n user_name: {data.get("user_name")} \n expected_expense_in_a_month: {data.get("expected_expense_in_a_month")} \n recommended_amount_per_day: {data.get("recommended_amount_per_day")} \n recommended_amount_today: {data.get("recommended_amount_today")} \n your_expense_until_now: {data.get("your_expense")} \n today_you_have_spent: {data.get("total_expense_a_day")} \n left_amount_in_a_day (compared to recommended_amount_today): {data.get("left_amount_in_a_day")} \n your_total_left_amount (compared to expected_expense_in_a_month): {data.get("total_left_amount")} \n expense_next_day: {data.get("expense_per_day_from_now_on")} \n amount_spent_on_Food: {data.get("amount_spent_on_Food")} \n amount_spent_on_Home: {data.get("amount_spent_on_Home")} \n amount_spent_on_Health: {data.get("amount_spent_on_Health")} \n amount_spent_on_Work: {data.get("amount_spent_on_Work")} \n amount_spent_on_Entertainment: {data.get("amount_spent_on_Entertainment")} \n amount_spent_on_Study: {data.get("amount_spent_on_Study")}")
     print (f"This is your history of expense today {data.get("last_update")}: {data.get("expense_per_day_list")}")
-    print(total_expense_a_day)
 
 def check_and_update_daily_data(data):
     global expense_a_month_list, expense_per_day_list
@@ -87,8 +86,8 @@ def update_category(data):
 def user(data):
     global user_name
     global list_of_expense
-    global expense_per_day_list
-    global total_expense_a_day
+    #DELETE global expense_per_day_list
+    #DELETE global total_expense_a_day
     if "user_name" not in data: #write into an empty file
         data["user_name"] = user_name
         data["last_update"] = datetime.today().strftime("%d/%m/%Y") #keep on updating last_update
@@ -123,10 +122,8 @@ def user(data):
                     new_added_category = str(input("Your added amount belongs to which of these categories? (Food / Home / Health / Work / Entertainment / Study): ")).capitalize()
                     if "expense_per_day_list" in data:
                         data["expense_per_day_list"].append(new_expense)
+                    data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
                     data["your_expense"] += new_expense
-                    for items in expense_per_day_list:
-                        total_expense_a_day += items
-                    data["total_expense_a_day"] = total_expense_a_day
                     data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
                     data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
                     data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
@@ -147,10 +144,7 @@ def user(data):
                     new_added_category = str(input("Your added amount belongs to which of these categories? (Food / Home / Health / Work / Entertainment / Study): ")).capitalize()
                     if "expense_per_day_list" in data:
                         data["expense_per_day_list"].append(new_expense)
-                    data["your_expense"] += new_expense
-                    for items in expense_per_day_list:
-                        total_expense_a_day += items
-                    data["total_expense_a_day"] = total_expense_a_day
+                    data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
                     data["left_amount_in_a_day"] = data["recommended_amount_per_day"] - data["total_expense_a_day"]
                     data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
                     data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
@@ -188,10 +182,8 @@ def expense(data):
                 list_of_expense[category_of_expense] += user_expense
                 data[f"amount_spent_on_{category_of_expense}"] = list_of_expense[category_of_expense]
                 save_data(data) #save and write data at right that loop
-        for items in expense_per_day_list:
-            total_expense_a_day += items
         if "total_expense_in_a_day" not in data: #after 24h total_expense_a_day returns 0 => need a array to store
-            data["total_expense_a_day"] = total_expense_a_day
+            data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
         if "left_amount_in_a_day" not in data:
             data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
         if "total_left_amount" not in data:
