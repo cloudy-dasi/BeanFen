@@ -58,6 +58,7 @@ def main():
     user(data)
     print(f"Here is your data: \n user_name: {data.get("user_name")} \n expected_expense_in_a_month: {data.get("expected_expense_in_a_month")} \n recommended_amount_per_day: {data.get("recommended_amount_per_day")} \n recommended_amount_today: {data.get("recommended_amount_today")} \n your_expense_until_now: {data.get("your_expense")} \n today_you_have_spent: {data.get("total_expense_a_day")} \n left_amount_in_a_day (compared to recommended_amount_today): {data.get("left_amount_in_a_day")} \n your_total_left_amount (compared to expected_expense_in_a_month): {data.get("total_left_amount")} \n expense_next_day: {data.get("expense_per_day_from_now_on")} \n amount_spent_on_Food: {data.get("amount_spent_on_Food")} \n amount_spent_on_Home: {data.get("amount_spent_on_Home")} \n amount_spent_on_Health: {data.get("amount_spent_on_Health")} \n amount_spent_on_Work: {data.get("amount_spent_on_Work")} \n amount_spent_on_Entertainment: {data.get("amount_spent_on_Entertainment")} \n amount_spent_on_Study: {data.get("amount_spent_on_Study")}")
     print (f"This is your history of expense today {data.get("last_update")}: {data.get("expense_per_day_list")}")
+    print(total_expense_a_day)
 
 def check_and_update_daily_data(data):
     global expense_a_month_list, expense_per_day_list
@@ -124,7 +125,7 @@ def user(data):
                         data["expense_per_day_list"].append(new_expense)
                     data["your_expense"] += new_expense
                     for items in expense_per_day_list:
-                        total_expense_a_day = total_expense_a_day + items
+                        total_expense_a_day += items
                     data["total_expense_a_day"] = total_expense_a_day
                     data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
                     data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
@@ -148,7 +149,7 @@ def user(data):
                         data["expense_per_day_list"].append(new_expense)
                     data["your_expense"] += new_expense
                     for items in expense_per_day_list:
-                        total_expense_a_day = total_expense_a_day + items
+                        total_expense_a_day += items
                     data["total_expense_a_day"] = total_expense_a_day
                     data["left_amount_in_a_day"] = data["recommended_amount_per_day"] - data["total_expense_a_day"]
                     data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
