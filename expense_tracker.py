@@ -42,7 +42,7 @@ def load_data(current_user_name): #load_data() happens only when user_name input
 
 recommended_amount_per_day = None
 #DELETE total_expense_a_day = 0
-list_of_expense = {"Food": 0, "Home": 0, "Health": 0, "Work": 0, "Entertainment": 0, "Study": 0}
+list_of_expense = {"Family": 0, "Study": 0, "Food": 0, "Home": 0, "Health": 0, "Work": 0, "Entertainment": 0, "Friends": 0, "Transport": 0}
 user_expense = int()
 expense_a_year_list = list()
 expense_a_month_list = list() #total_expense_in_day (30 items)
@@ -56,7 +56,8 @@ def main():
     data = load_data(user_name) #or data = json.load(f)
     check_and_update_daily_data(data) #check the date right after loading the file
     user(data)
-    print(f"Here is your data: \n user_name: {data.get("user_name")} \n expected_expense_in_a_month: {data.get("expected_expense_in_a_month")} \n recommended_amount_per_day: {data.get("recommended_amount_per_day")} \n recommended_amount_today: {data.get("recommended_amount_today")} \n your_expense_until_now: {data.get("your_expense")} \n today_you_have_spent: {data.get("total_expense_a_day")} \n left_amount_in_a_day (compared to recommended_amount_today): {data.get("left_amount_in_a_day")} \n your_total_left_amount (compared to expected_expense_in_a_month): {data.get("total_left_amount")} \n expense_next_day: {data.get("expense_per_day_from_now_on")} \n amount_spent_on_Food: {data.get("amount_spent_on_Food")} \n amount_spent_on_Home: {data.get("amount_spent_on_Home")} \n amount_spent_on_Health: {data.get("amount_spent_on_Health")} \n amount_spent_on_Work: {data.get("amount_spent_on_Work")} \n amount_spent_on_Entertainment: {data.get("amount_spent_on_Entertainment")} \n amount_spent_on_Study: {data.get("amount_spent_on_Study")}")
+    print(f"Here is your data: \n user_name: {data.get("user_name")} \n your_control_expense_days: {data.get("control_expense_days")} \n total_amount_of_expense_need_controlling: {data.get("expected_expense_amount")} \n recommended_amount_per_day: {data.get("recommended_amount_per_day")} \n recommended_amount_today: {data.get("recommended_amount_today")} \n your_expense_until_now: {data.get("your_expense")} \n today_you_have_spent: {data.get("total_expense_a_day")} \n left_amount_in_a_day (compared to recommended_amount_today): {data.get("left_amount_in_a_day")} \n your_total_left_amount (compared to control_expense_days): {data.get("total_left_amount")} \n expense_next_day: {data.get("expense_next_day")} \n amount_spent_on_Food: {data.get("amount_spent_on_Food")} \n amount_spent_on_Home: {data.get("amount_spent_on_Home")} \n amount_spent_on_Health: {data.get("amount_spent_on_Health")} \n amount_spent_on_Work: {data.get("amount_spent_on_Work")} \n amount_spent_on_Entertainment: {data.get("amount_spent_on_Entertainment")} \n amount_spent_on_Study: {data.get("amount_spent_on_Study")}")
+    print(f" mount_spent_on_Family: {data.get("amount_spent_on_Family")} \n amount_spent_on_Friends: {data.get("amount_spent_on_Friends")} \n amount_spent_on_Transport: {data.get("amount_spent_on_Transport")}")
     print (f"This is your history of expense today {data.get("last_update")}: {data.get("expense_per_day_list")}")
 
 def check_and_update_daily_data(data):
@@ -68,6 +69,8 @@ def check_and_update_daily_data(data):
     else: #if last_update exists, it wont update the "last_update", just check the condition following
         if data.get("last_update") != datetime.today().strftime("%d/%m/%Y"):
             expense_a_month_list.append(data.get("expense_per_day_list"))
+            data["control_expense_days"] -= 1
+            print(f"Welcome to next day! :3 \nYou have {data["control_expense_days"]} days left to control your expense")
             data["expense_per_day_list"] = []
             data["total_expense_a_day"] = 0
             if data["left_amount_in_a_day"] <0: #check if the left amount is negative
@@ -94,6 +97,8 @@ def user(data):
         data["last_update"] = datetime.today().strftime("%d/%m/%Y") #keep on updating last_update
         check_and_update_daily_data(data) #check again to make sure
         update_category(data)
+        control_expense_days(data)
+        expected_expense(data)
         recommended_per_day(data)
         expense(data)
         save_data(data) #make sure all data have been saved and written
@@ -103,93 +108,123 @@ def user(data):
             data["last_update"] = datetime.today().strftime("%d/%m/%Y")
             check_and_update_daily_data(data)
             print("Your account was saved!")
-            total_expense_overwrite = str(input("Do you want to overwrite your 'expected total expense in a month' (write Y/N): ")).capitalize()
-            if total_expense_overwrite == "Y":
-                data["last_update"] = datetime.today().strftime("%d/%m/%Y")
-                check_and_update_daily_data(data)
-                new_total_expected_expense = int(input("The new amount you expect to spend in this month: "))
-                print ("You have successfully overwritten your expected_amount_in_a_month!")
-                data["expected_expense_in_a_month"] = new_total_expected_expense
-                data["recommended_amount_per_day"] = int(data["expected_expense_in_a_month"] / 30)
-                data["recommended_amount_today"] = data["recommended_amount_per_day"]
-                data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
-                data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
-                data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
-                add_more_new_expense = str(input("Do you want to add more new expense? (write Y/N): ")).capitalize()
-                if add_more_new_expense == "Y":
-                    data["last_update"] = datetime.today().strftime("%d/%m/%Y")
-                    check_and_update_daily_data(data)
-                    new_expense = int(input("The amount of expense you want to add: "))
-                    new_added_category = str(input("Your added amount belongs to which of these categories? (Food / Home / Health / Work / Entertainment / Study): ")).capitalize()
-                    if "expense_per_day_list" in data:
-                        data["expense_per_day_list"].append(new_expense)
-                    data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
-                    data["your_expense"] += new_expense
-                    data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
-                    data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
-                    data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
-                    for keys in list_of_expense:
-                        if f"amount_spent_on_{keys}" in data:
-                            if new_added_category == keys:
-                                data[f"amount_spent_on_{keys}"] += new_expense
-                save_data(data) #save and write data into the file only when user input and process all inputs
-            else:
-                data["last_update"] = datetime.today().strftime("%d/%m/%Y")
-                check_and_update_daily_data(data)
-                add_more_new_expense = str(input("Do you want to add more new expense? (write Y/N): ")).capitalize()
-                if add_more_new_expense == "Y":
-                    data["last_update"] = datetime.today().strftime("%d/%m/%Y")
-                    check_and_update_daily_data(data)
-                    new_expense = int(input("The amount of expense you want to add: "))
-                    new_added_category = str(input("Your added amount belongs to which of these categories? (Food / Home / Health / Work / Entertainment / Study): ")).capitalize()
-                    if "expense_per_day_list" in data:
-                        data["expense_per_day_list"].append(new_expense)
-                    data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
-                    data["your_expense"] += new_expense
-                    data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
-                    data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
-                    data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
-                    for keys in list_of_expense:
-                        if f"amount_spent_on_{keys}" in data:
-                            if new_added_category == keys:
-                                data[f"amount_spent_on_{keys}"] += new_expense
-                save_data(data)
+            print("Welcome back my friend! :3")
+            overwrite_control_expense_days(data)
+            overwrite_total_expense(data)
+            add_more_new_expense(data)
 
-def recommended_per_day(data): #write and save data when file is empty
+def control_expense_days(data): #write and save data when data is empty
+    if "control_expense_days" not in data:
+        control_expense_days = int(input("How many days you want to control your expense? (write a number): "))
+        if control_expense_days < 1:
+            print("Please enter a number >= 1")
+            control_expense_days(data) #call the function again
+        else:
+            data["control_expense_days"] = control_expense_days
+            save_data(data)
+
+def expected_expense(data): #write and save data when data is empty
+    if "expected_expense_amount" not in data:
+        expected_expense_amount = int(input("The amount of expense you want to control: "))
+        if expected_expense_amount < 1:
+            print("Please enter a number >= 1")
+            expected_expense(data) #call the function again
+        else:
+            data["expected_expense_amount"] = expected_expense_amount
+            save_data(data)
+
+def recommended_per_day(data): #write and save data when data is empty
     global recommended_amount_per_day
-    if "expected_expense_in_a_month" not in data:
-        total_expense = int(input("The amount you expect to spend in this month: "))
-        data["expected_expense_in_a_month"] = total_expense
-        if "recommended_amount_per_day" not in data:
-            recommended_amount_per_day = int(data["expected_expense_in_a_month"] / 30)
-            data["recommended_amount_per_day"] = recommended_amount_per_day
-            if "recommended_amount_today" not in data:
-                data["recommended_amount_today"] = data["recommended_amount_per_day"]
-        save_data(data) #save data only when finishing the input (write data into file)
+    if "recommended_amount_per_day" not in data:
+        recommended_amount_per_day = int(data["expected_expense_amount"] / data["control_expense_days"])
+        data["recommended_amount_per_day"] = recommended_amount_per_day
+        if "recommended_amount_today" not in data:
+            data["recommended_amount_today"] = data["recommended_amount_per_day"]
+    save_data(data) #save data only when finishing the input (write data into file)
     print(f"The amount should be spent on a day: {data["recommended_amount_per_day"]}")
 
-def expense(data): #write and save data when file is empty
-    global total_expense_a_day, recommended_amount_per_day, user_expense
+def expense(data): #write and save data when data is empty
+    global recommended_amount_per_day, user_expense
     if "your_expense" not in data:
         user_expense = int(input("The amount you have just spent: "))
         data["your_expense"] = user_expense
         if "expense_per_day_list" not in data:
             data["expense_per_day_list"] = []
         data["expense_per_day_list"].append(user_expense)
-        category_of_expense = str(input("Which one in these categories you have spent on? (Food / Home / Health / Work / Entertainment / Study): ")).capitalize()
+        if "total_expense_in_a_day" not in data: #after 24h total_expense_a_day returns 0 => need a array to store
+            data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
+        #input category of expense
+        category_of_expense = str(input("Which one in these categories you have spent on? (Family / Study / Food / Home / Health / Work / Entertainment / Friends / Transport): ")).capitalize()
         for keys in list_of_expense:
             if category_of_expense == keys:
                 data[f"amount_spent_on_{keys}"] = user_expense
                 save_data(data)
-        if "total_expense_in_a_day" not in data: #after 24h total_expense_a_day returns 0 => need a array to store
-            data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
         if "left_amount_in_a_day" not in data:
             data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
         if "total_left_amount" not in data:
-            data["total_left_amount"] = data["expected_expense_in_a_month"] - data["your_expense"]
-        if "expense_per_day_from_now_on" not in data:
-            data["expense_per_day_from_now_on"] = int(data["total_left_amount"] / 30)
+            data["total_left_amount"] = data["expected_expense_amount"] - data["your_expense"]
+        if "expense_next_day" not in data:
+            data["expense_next_day"] = int(data["total_left_amount"] / (data["control_expense_days"] - 1))
         save_data(data)
     print(f"The left amount you should spend in a day to achieve the target 'spending {data["recommended_amount_per_day"]} a day': {data["left_amount_in_a_day"]}")
+
+def overwrite_control_expense_days(data): #overwrite control_expense_days
+    if "control_expense_days" in data:
+        control_expense_days_overwrite = str(input("Do you want to overwrite your 'control_expense_days' (write Y/N): ")).capitalize()
+        if control_expense_days_overwrite == "Y":
+            data["last_update"] = datetime.today().strftime("%d/%m/%Y")
+            check_and_update_daily_data(data)
+            new_control_expense_days = int(input("How many days you want to control your expense? (write a number): "))
+            if new_control_expense_days < 1:
+                print("Please enter a number >= 1")
+                control_expense_days_overwrite(data)
+            else:
+                data["control_expense_days"] = new_control_expense_days
+                print ("You have successfully overwritten your control_expense_days!")
+                data["recommended_amount_per_day"] = int(data["expected_expense_amount"] / data["control_expense_days"])
+                data["recommended_amount_today"] = data["recommended_amount_per_day"]
+                data["expense_next_day"] = int(data["total_left_amount"] / (data["control_expense_days"] - 1))
+                data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
+                save_data(data)
+
+def overwrite_total_expense(data): #overwrite total_expense_in_a_month
+    if "expected_expense_amount" in data:
+        total_expense_overwrite = str(input("Do you want to overwrite your amount of expense that needs controlling (write Y/N): ")).capitalize()
+        if total_expense_overwrite == "Y":
+            data["last_update"] = datetime.today().strftime("%d/%m/%Y")
+            check_and_update_daily_data(data)
+            new_total_expected_expense = int(input("The new amount of expense you want to control: "))
+            print ("You have successfully overwritten your expected_expense_amount!")
+            data["expected_expense_amount"] = new_total_expected_expense
+            data["recommended_amount_per_day"] = int(data["expected_expense_amount"] / data["control_expense_days"])
+            data["recommended_amount_today"] = data["recommended_amount_per_day"]
+            data["expense_next_day"] = int(data["total_left_amount"] / (data["control_expense_days"] - 1))
+            data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
+            data["total_left_amount"] = data["expected_expense_amount"] - data["your_expense"]
+            save_data(data)
+        else:
+            add_more_new_expense(data)
+
+def add_more_new_expense(data):
+    data["last_update"] = datetime.today().strftime("%d/%m/%Y")
+    check_and_update_daily_data(data)
+    add_more_new_expense = str(input("Do you want to add more new expense? (write Y/N): ")).capitalize()
+    if add_more_new_expense == "Y":
+        data["last_update"] = datetime.today().strftime("%d/%m/%Y")
+        check_and_update_daily_data(data)
+        new_expense = int(input("The amount of expense you want to add: "))
+        new_added_category = str(input("Your added amount belongs to which of these categories? (Family / Study / Food / Home / Health / Work / Entertainment / Friends / Transport): ")).capitalize()
+        if "expense_per_day_list" in data:
+            data["expense_per_day_list"].append(new_expense)
+        data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
+        data["your_expense"] += new_expense
+        data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
+        data["total_left_amount"] = data["expected_expense_amount"] - data["your_expense"]
+        data["expense_next_day"] = int(data["total_left_amount"] / (data["control_expense_days"] - 1))
+        for keys in list_of_expense:
+            if f"amount_spent_on_{keys}" in data:
+                if new_added_category == keys:
+                    data[f"amount_spent_on_{keys}"] += new_expense
+    save_data(data)
 
 main()
