@@ -76,7 +76,7 @@ def check_and_update_daily_data(data):
         save_data(data)
 
 
-def update_category(data):
+def update_category(data): #write and save data when file is empty
     for keys in list_of_expense:
         if keys not in data:
             data[f"amount_spent_on_{keys}"] = list_of_expense[keys]
@@ -90,13 +90,14 @@ def user(data):
     #DELETE global total_expense_a_day
     if "user_name" not in data: #write into an empty file
         data["user_name"] = user_name
+        save_data(data) #when finish writing and save user_name then process other data
         data["last_update"] = datetime.today().strftime("%d/%m/%Y") #keep on updating last_update
         check_and_update_daily_data(data) #check again to make sure
         update_category(data)
         recommended_per_day(data)
         expense(data)
-        save_data(data) #make sure all data have been saved and written, save and write the data of user_name
-    if "user_name" in data:
+        save_data(data) #make sure all data have been saved and written
+    if "user_name" in data: #write and save data when data in file exists
         #user_name = input("Enter your name (perhaps again :3 ): ").capitalize()
         if data["user_name"] == user_name:
             data["last_update"] = datetime.today().strftime("%d/%m/%Y")
@@ -154,7 +155,7 @@ def user(data):
                                 data[f"amount_spent_on_{keys}"] += new_expense
                 save_data(data)
 
-def recommended_per_day(data):
+def recommended_per_day(data): #write and save data when file is empty
     global recommended_amount_per_day
     if "expected_expense_in_a_month" not in data:
         total_expense = int(input("The amount you expect to spend in this month: "))
@@ -167,7 +168,7 @@ def recommended_per_day(data):
         save_data(data) #save data only when finishing the input (write data into file)
     print(f"The amount should be spent on a day: {data["recommended_amount_per_day"]}")
 
-def expense(data):
+def expense(data): #write and save data when file is empty
     global total_expense_a_day, recommended_amount_per_day, user_expense
     if "your_expense" not in data:
         user_expense = int(input("The amount you have just spent: "))
