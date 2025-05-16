@@ -70,12 +70,12 @@ def check_and_update_daily_data(data):
         if data.get("last_update") != datetime.today().strftime("%d/%m/%Y"):
             expense_a_month_list.append(data.get("expense_per_day_list"))
             data["control_expense_days"] -= 1
-            print(f"Welcome to next day! :3 \nYou have {data["control_expense_days"]} days left to control your expense")
+            print(f"Welcome to next day! :3 \nYou have {data["control_expense_days"]} days left to control your expense compared to the last_update")
             data["expense_per_day_list"] = []
             data["total_expense_a_day"] = 0
             if data["left_amount_in_a_day"] <0: #check if the left amount is negative
-                print(f"Your previous day expense extends the recommended an amount {data["left_amount_in_a_day"]} \nso we will overwrite the recommended_amount_today to make it suitable with your condition :3")
-                data["recommended_amount_today"] = data["expense_per_day_from_now_on"]
+                print(f"Your previous day expense extends the recommended an amount {data["left_amount_in_a_day"]} \nif you dont overwrite control_expense_days or total_amount_of_expense_need_controlling,\nwe will overwrite the recommended_amount_today to make it suitable with your condition :3")
+                data["recommended_amount_today"] = data["expense_next_day"]
         save_data(data)
 
 
@@ -183,7 +183,6 @@ def overwrite_control_expense_days(data): #overwrite control_expense_days
                 print ("You have successfully overwritten your control_expense_days!")
                 data["recommended_amount_per_day"] = int(data["expected_expense_amount"] / data["control_expense_days"])
                 data["recommended_amount_today"] = data["recommended_amount_per_day"]
-                data["expense_next_day"] = int(data["total_left_amount"] / (data["control_expense_days"] - 1))
                 data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
                 save_data(data)
 
@@ -191,19 +190,17 @@ def overwrite_total_expense(data): #overwrite total_expense_in_a_month
     if "expected_expense_amount" in data:
         total_expense_overwrite = str(input("Do you want to overwrite your amount of expense that needs controlling (write Y/N): ")).capitalize()
         if total_expense_overwrite == "Y":
-            data["last_update"] = datetime.today().strftime("%d/%m/%Y")
-            check_and_update_daily_data(data)
+            data["last_update"] = datetime.today().strftime("%d/%m/%Y") #update last_update
+            check_and_update_daily_data(data) #check the date and modify data if needed before overwriting
             new_total_expected_expense = int(input("The new amount of expense you want to control: "))
             print ("You have successfully overwritten your expected_expense_amount!")
             data["expected_expense_amount"] = new_total_expected_expense
+            data["total_left_amount"] = data["expected_expense_amount"] - data["your_expense"]
             data["recommended_amount_per_day"] = int(data["expected_expense_amount"] / data["control_expense_days"])
             data["recommended_amount_today"] = data["recommended_amount_per_day"]
             data["expense_next_day"] = int(data["total_left_amount"] / (data["control_expense_days"] - 1))
             data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
-            data["total_left_amount"] = data["expected_expense_amount"] - data["your_expense"]
             save_data(data)
-        else:
-            add_more_new_expense(data)
 
 def add_more_new_expense(data):
     data["last_update"] = datetime.today().strftime("%d/%m/%Y")
