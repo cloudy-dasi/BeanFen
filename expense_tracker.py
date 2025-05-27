@@ -162,7 +162,7 @@ def expense(data): #write and save data when data is empty
         if "left_amount_in_a_day" not in data:
             data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
         if "total_left_amount" not in data:
-            data["total_left_amount"] = data["expected_expense_amount"] - data["your_expense"]
+            data["total_left_amount"] = data["expected_expense_amount"] - data["total_expense_a_day"]
         if "expense_next_day" not in data:
             data["expense_next_day"] = int(data["total_left_amount"] / (data["control_expense_days"] - 1))
         save_data(data)
@@ -195,7 +195,7 @@ def overwrite_total_expense(data): #overwrite total_expense_in_a_month
             new_total_expected_expense = int(input("The new amount of expense you want to control: "))
             print ("You have successfully overwritten your expected_expense_amount!")
             data["expected_expense_amount"] = new_total_expected_expense
-            data["total_left_amount"] = data["expected_expense_amount"] - data["your_expense"]
+            data["total_left_amount"] = data["expected_expense_amount"] - data["total_expense_a_day"]
             data["recommended_amount_per_day"] = int(data["expected_expense_amount"] / data["control_expense_days"])
             data["recommended_amount_today"] = data["recommended_amount_per_day"]
             data["expense_next_day"] = int(data["total_left_amount"] / (data["control_expense_days"] - 1))
@@ -216,7 +216,7 @@ def add_more_new_expense(data):
         data["total_expense_a_day"] = sum(data.get("expense_per_day_list", []))
         data["your_expense"] += new_expense
         data["left_amount_in_a_day"] = data["recommended_amount_today"] - data["total_expense_a_day"]
-        data["total_left_amount"] = data["expected_expense_amount"] - data["your_expense"]
+        data["total_left_amount"] = data["expected_expense_amount"] - data["total_expense_a_day"]
         data["expense_next_day"] = int(data["total_left_amount"] / (data["control_expense_days"] - 1))
         for keys in list_of_expense:
             if f"amount_spent_on_{keys}" in data:
