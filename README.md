@@ -1,5 +1,5 @@
 # WELCOME TO BEANFEN
-### A friendly friend who helps you control your expense day to day to meet your expected expenditure in a month
+### A friendly friend who helps you control your expense day to day to meet your expected expenditure in a period of time
 
 #### Here are some notes I take when making this one:
 1. First
